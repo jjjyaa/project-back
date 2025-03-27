@@ -1,0 +1,11 @@
+### 회원가입 테스트 - 비밀번호 암호화 확인용
+POST http://localhost:8082/api/members/signup
+Content-Type: application/json
+
+{
+  "email": "test2@example.com",
+  "password": "1234",
+  "name": "테스트유저",
+  "phone": "010-9999-0000",
+  "address": "서울시 테스트구"
+}
