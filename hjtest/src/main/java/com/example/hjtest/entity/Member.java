@@ -5,6 +5,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 // Entity 는 DB 테이블과 매핑
 // DB에 실제로 저장될 사용자 정보
 @Entity
@@ -14,24 +17,21 @@ import lombok.NoArgsConstructor;
 public class Member {
 
     @Id // 기본키
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // 자동 증가 값
-    private Long id;
-
-    @Column
     private String email;
 
-    @Column
     private String password;
 
-    @Column
     private String name;
 
-    @Column
     private String phone;
 
-    @Column
     private String address;
 
+    @OneToMany(mappedBy = "member")  // Member가 작성한 게시글
+    private List<Board> boards;
+
+    @OneToMany(mappedBy = "member")  // Member가 작성한 댓글
+    private List<Comment> comments;
 }
 
 

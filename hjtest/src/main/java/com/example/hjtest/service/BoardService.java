@@ -8,12 +8,13 @@ import java.util.List;
 public interface BoardService {
     List<Board> selectBoardList();
 
-    Board selectBoardDetail(Long id);
+    Board selectBoardDetail(Long boardId);
 
-    Board insertBoard(BoardDto boardDto);
+    Board insertBoard(BoardDto boardDto,String email);
 
-    Board updateBoard(Long id, BoardDto boardDto);
+    Board updateBoard(Long boardId, BoardDto boardDto);
 
-    boolean deleteBorad(Long id);
+    boolean deleteBorad(Long boardId);
 
+    void incrementHitCount(Long boardId);
 }

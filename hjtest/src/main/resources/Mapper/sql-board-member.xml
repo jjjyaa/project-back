@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.hjtest.mapper.BoardMemberMapper">
+
+
+
+    <select id="getBoardWithCreator" resultMap="BoardWithMemberDto">
+        SELECT b.boardId, b.title, b.contents, b.creator_id, m.name
+        FROM t_Board b
+        JOIN Member m ON b.creator_id = m.email
+        WHERE b.id = #{id}
+    </select>
+
+</mapper>

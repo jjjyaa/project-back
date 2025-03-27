@@ -1,13 +1,17 @@
 package com.example.hjtest.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
-@Entity(name = "t_Board")
+@Entity
+@Table(name = "t_board")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -15,28 +19,27 @@ public class Board {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long boardId;
 
-    @Column
     private String title;
 
-    @Column
     private String contents;
 
-    @Column
-    private int hitCnt;
+    private int hitCnt=0;
 
-    @Column
-    private String creatorId;
+    @ManyToOne
+    @JoinColumn(name = "email")
+    private Member member;
 
-    @Column
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
     private LocalDateTime createdDatetime;
 
-    @Column
-    private String updaterId;
-
-    @Column
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
     private LocalDateTime updatedDatetime;
+
+    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
+    private List<Comment> comments;
+
 
     // 최초 생성 시점에 자동으로 갱신
     @PrePersist
@@ -55,9 +58,6 @@ public class Board {
         }
         if (contents != null && !board.contents.trim().isEmpty()){
             this.contents=board.contents;
-        }
-        if (updaterId != null && !board.updaterId.trim().isEmpty()){
-            this.updaterId=board.updaterId;
         }
     }
 }

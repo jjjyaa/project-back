@@ -1,22 +1,28 @@
 package com.example.hjtest.Dto;
 
+import com.example.hjtest.entity.Board;
+import com.example.hjtest.entity.Comment;
 import com.example.hjtest.entity.Member;
 import lombok.Data;
+
+import java.util.List;
 
 // React에서 입력한 데이터를 서버로 전달받기 위한 데이터 전달 객체
 
 // 회원가입용
 @Data
 public class MemberDto {
-    private Long id;
+    private Long memberId;
     private String email;
     private String password;
     private String name;
     private String phone;
     private String address;
+    private List<Board> boards;
+    private List<Comment> comments;
 
     public Member toEntity(){
 
-        return new Member(id,email, password, name, phone, address);
+        return new Member(email, password, name, phone, address,boards,comments);
     }
 }
