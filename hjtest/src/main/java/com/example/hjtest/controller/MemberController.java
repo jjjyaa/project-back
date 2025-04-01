@@ -32,9 +32,9 @@ public class MemberController {
 
     // 로그인
     @PostMapping("/login")
-    public ResponseEntity<Member> login(@RequestBody LoginDto loginDto) {
-        log.info("로그인 요청: {}", loginDto.toString());
-        Member member = memberService.login(loginDto);
+    public ResponseEntity<Member> login(@RequestBody MemberDto MemberDto) {
+        log.info("로그인 요청: {}", MemberDto.toString());
+        Member member = memberService.login(MemberDto);
         return ResponseEntity.ok(member);
     }
 

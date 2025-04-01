@@ -24,6 +24,6 @@ public class Comment {
     private Board board;
 
     @ManyToOne
-    @JoinColumn(name = "member_id")
+    @JoinColumn(name = "member_email")
     private Member member;
 }

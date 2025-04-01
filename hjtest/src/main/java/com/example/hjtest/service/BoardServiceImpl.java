@@ -2,12 +2,12 @@ package com.example.hjtest.service;
 
 import com.example.hjtest.Dto.BoardDto;
 import com.example.hjtest.Dto.CommentDto;
-import com.example.hjtest.Exception.BoardNotFoundException;
 import com.example.hjtest.entity.Board;
 import com.example.hjtest.entity.Comment;
 import com.example.hjtest.entity.Member;
 import com.example.hjtest.repository.BoardRepository;
 import com.example.hjtest.repository.MemberRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,13 +32,13 @@ public class BoardServiceImpl implements BoardService{
     @Override
     public Board selectBoardDetail(Long boardId) {
         return boardRepository.findById(boardId)
-                .orElseThrow(() -> new BoardNotFoundException("Board not found"));
+                .orElseThrow(() -> new EntityNotFoundException("Board not found"));
     }
 
     @Override
     public Board insertBoard(BoardDto boardDto, String email) {
         // 로그인한 사용자의 Member 정보 조회
-        Member member = memberRepository.findByEmail(email)
+        Member member = memberRepository.findById(email)
                 .orElseThrow(() -> new IllegalArgumentException("Member not found"));
 
         // BoardDto를 Board 엔티티로 변환
@@ -79,7 +79,7 @@ public class BoardServiceImpl implements BoardService{
     @Override
     public boolean deleteBorad(Long boardId) {
         Board findBoard = boardRepository.findById(boardId)
-                .orElseThrow(() -> new BoardNotFoundException("Board not found"));
+                .orElseThrow(() -> new EntityNotFoundException("Board not found"));
         boardRepository.delete(findBoard);
         return true;
     }
@@ -94,7 +94,7 @@ public class BoardServiceImpl implements BoardService{
         return commentDtos.stream()
                 .map(commentDto -> {
                     // 해당 Member를 DB에서 조회
-                    Member memberEntity = memberRepository.findById(commentDto.getMemberId())
+                    Member memberEntity = memberRepository.findById(commentDto.getMemberEmail())
                             .orElseThrow(() -> new IllegalArgumentException("Member not found"));
 
                     // 변환된 엔티티를 반환

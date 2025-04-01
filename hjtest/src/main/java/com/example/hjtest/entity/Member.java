@@ -27,11 +27,11 @@ public class Member {
 
     private String address;
 
-    @OneToMany(mappedBy = "member")  // Member가 작성한 게시글
-    private List<Board> boards;
+    @OneToMany(mappedBy = "member",cascade = CascadeType.ALL,orphanRemoval = true)  // Member가 작성한 게시글
+    private List<Board> boards = new ArrayList<>();
 
-    @OneToMany(mappedBy = "member")  // Member가 작성한 댓글
-    private List<Comment> comments;
+    @OneToMany(mappedBy = "member",cascade = CascadeType.ALL,orphanRemoval = true)  // Member가 작성한 댓글
+    private List<Comment> comments = new ArrayList<>();
 }
 
 

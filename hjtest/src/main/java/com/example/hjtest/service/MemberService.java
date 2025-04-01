@@ -9,5 +9,8 @@ public interface MemberService {
     public Member insertMember(MemberDto memberDto);
 
     // 로그인
-    public Member login(LoginDto loginDto);
+    public Member login(MemberDto MemberDto);
+
+    // 회원탈퇴
+    public Member deleteMember(String email);
 }
