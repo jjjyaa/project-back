@@ -14,6 +14,7 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequestMapping("api/boards")
+@CrossOrigin(origins = "http://localhost:3000")
 public class BoardController {
 
     @Autowired

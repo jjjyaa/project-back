@@ -1,14 +1,11 @@
 package com.example.hjtest.Dto;
 
 import com.example.hjtest.entity.Board;
-import com.example.hjtest.entity.Comment;
-import com.example.hjtest.entity.Member;
 import lombok.Data;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Data
 public class BoardDto {

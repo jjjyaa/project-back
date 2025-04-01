@@ -2,6 +2,7 @@ package com.example.hjtest.service;
 
 import com.example.hjtest.Dto.BoardDto;
 import com.example.hjtest.Dto.CommentDto;
+import com.example.hjtest.Dto.MemberDto;
 import com.example.hjtest.entity.Board;
 import com.example.hjtest.entity.Comment;
 import com.example.hjtest.entity.Member;
@@ -31,6 +32,11 @@ public class BoardServiceImpl implements BoardService{
 
     @Override
     public Board selectBoardDetail(Long boardId) {
+        Board board = boardRepository.findById(boardId)
+                .orElseThrow(() -> new EntityNotFoundException("Board not found"));
+        // 엔티티를 DTO로 변환
+
+
         return boardRepository.findById(boardId)
                 .orElseThrow(() -> new EntityNotFoundException("Board not found"));
     }
@@ -89,6 +95,8 @@ public class BoardServiceImpl implements BoardService{
     public void incrementHitCount(Long boardId) {
         boardRepository.updateHitCount(boardId);
     }
+
+
     // 댓글을 엔티티로 변환하는 메서드
     private List<Comment> convertComments(List<CommentDto> commentDtos, Board board) {
         return commentDtos.stream()

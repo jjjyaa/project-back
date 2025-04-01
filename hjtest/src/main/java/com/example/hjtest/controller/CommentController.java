@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 @RestController
 @RequestMapping("api/comments")
+@CrossOrigin(origins = "http://localhost:3000")
 public class CommentController {
     @Autowired
     private CommentService commentService;
