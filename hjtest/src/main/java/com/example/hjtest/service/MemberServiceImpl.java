@@ -3,6 +3,7 @@ package com.example.hjtest.service;
 
 import com.example.hjtest.entity.Board;
 import com.example.hjtest.entity.Comment;
+import com.example.hjtest.exception.DuplicateEmailException;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,10 @@ public class MemberServiceImpl implements MemberService {
     // 회원가입 (회원등록)
     @Override
     public Member insertMember(MemberDto memberDto) {
+
+        if (memberRepository.existsById(memberDto.getEmail())) {
+            throw new DuplicateEmailException("이미 사용 중인 이메일 입니다.");
+        }
         log.info(memberDto.toString());
         // DTO → Entity 변환
         Member member = memberDto.toEntity();

@@ -3,15 +3,13 @@ package com.example.hjtest.controller;
 import com.example.hjtest.Dto.LoginDto;
 import com.example.hjtest.Dto.MemberDto;
 import com.example.hjtest.entity.Member;
+import com.example.hjtest.exception.DuplicateEmailException;
 import com.example.hjtest.service.MemberService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
@@ -28,6 +26,11 @@ public class MemberController {
         log.info("회원가입 요청: {}", memberDto.toString());
         Member insertmember = memberService.insertMember(memberDto);
         return ResponseEntity.ok(insertmember);
+    }
+
+    @ExceptionHandler(DuplicateEmailException.class)
+    public ResponseEntity<String> handleDuplicateEmailException(DuplicateEmailException e) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
     }
 
     // 로그인
