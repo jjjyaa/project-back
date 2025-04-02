@@ -9,6 +9,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,7 +22,7 @@ public class Board {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long boardId;
+    private int boardId;
 
     private String title;
 
@@ -34,13 +35,11 @@ public class Board {
     @JsonManagedReference
     private Member member;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
-    private LocalDateTime createdDatetime;
+    private String createdDatetime;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
-    private LocalDateTime updatedDatetime;
+    private String updatedDatetime;
 
-    @JsonManagedReference
+    @JsonBackReference
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
     private List<Comment> comments;
 
@@ -48,14 +47,15 @@ public class Board {
     // 최초 생성 시점에 자동으로 갱신
     @PrePersist
     public void prePersist() {
-        this.createdDatetime = LocalDateTime.now();  // 생성 시점에 자동으로 시간 갱신
+        // LocalDateTime을 원하는 형식의 String으로 변환하여 저장
+        this.createdDatetime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
     }
 
     @PreUpdate
     public void preUpdate() {
-        this.updatedDatetime = LocalDateTime.now();  // 수정 시점에 자동으로 시간 갱신
+        // 수정 시점에 자동으로 시간 갱신 (String으로 변환)
+        this.updatedDatetime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
     }
-
     public void patchCheck(Board board){
         if (title != null && !board.title.trim().isEmpty()){
             this.title=board.title;

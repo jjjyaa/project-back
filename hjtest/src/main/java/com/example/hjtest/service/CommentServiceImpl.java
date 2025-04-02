@@ -11,6 +11,7 @@ import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -26,9 +27,8 @@ public class CommentServiceImpl implements CommentService{
     private MemberRepository memberRepository;
 
     @Override
-    public Comment getCommentById(Long commentId) {
-        return commentRepository.findById(commentId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 ID의 댓글을 찾을 수 없습니다: " + commentId));
+    public List<Comment> getCommentByBoardId(int boardId) {
+        return commentRepository.findAllByBoardBoardId(boardId);
     }
 
     // 댓글 생성

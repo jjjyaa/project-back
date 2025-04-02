@@ -1,6 +1,6 @@
 package com.example.hjtest.service;
 
-import com.example.hjtest.Dto.LoginDto;
+
 import com.example.hjtest.Dto.MemberDto;
 import com.example.hjtest.entity.Member;
 

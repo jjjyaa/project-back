@@ -25,7 +25,7 @@ public class BoardController {
         return boardService.selectBoardList();
     }
     @GetMapping("/{id}")
-    public ResponseEntity<Board> detailBoard(@PathVariable("id") Long id){
+    public ResponseEntity<Board> detailBoard(@PathVariable("id") int id){
         Board board = boardService.selectBoardDetail(id);
         if(board ==null){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
@@ -42,7 +42,7 @@ public class BoardController {
         return ResponseEntity.status(HttpStatus.CREATED).body(board);
     }
     @PatchMapping("/{id}/update")
-    public ResponseEntity<Board> updateBoard(@PathVariable("id") Long id,
+    public ResponseEntity<Board> updateBoard(@PathVariable("id") int id,
                                              @RequestBody BoardDto boardDto){
         Board board = boardService.updateBoard(id,boardDto);
         if (board==null){
@@ -51,7 +51,7 @@ public class BoardController {
         return ResponseEntity.status(HttpStatus.OK).body(board);
     }
     @DeleteMapping("/{id}/delete")
-    public ResponseEntity<?> deleteBoarad(@PathVariable("id") Long id){
+    public ResponseEntity<?> deleteBoarad(@PathVariable("id") int id){
         boolean isDeleted = boardService.deleteBorad(id);
         if(isDeleted){
             return ResponseEntity.ok("게시글이 삭제되었습니다.");

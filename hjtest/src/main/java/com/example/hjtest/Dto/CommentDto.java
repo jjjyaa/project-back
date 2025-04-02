@@ -13,10 +13,10 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CommentDto {
-    private Long commentId;
+    private int commentId;
     private String content;
-    private LocalDateTime createdDatetime;
-    private Long boardId;
+    private String createdDatetime;
+    private int boardId;
     private String memberEmail;
 
     public Comment toEntity(Board board, Member member) {

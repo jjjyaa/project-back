@@ -10,13 +10,13 @@ import java.util.List;
 
 @Data
 public class BoardDto {
-    private Long boardId;
+    private int boardId;
     private String title;
     private String contents;
     private int hitCnt;
     private MemberDto member;
-    private LocalDateTime createdDatetime;
-    private LocalDateTime updatedDatetime;
+    private String createdDatetime;
+    private String updatedDatetime;
     private List<CommentDto> comments = new ArrayList<>();
 
 

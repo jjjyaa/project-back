@@ -31,7 +31,7 @@ public class BoardServiceImpl implements BoardService{
     }
 
     @Override
-    public Board selectBoardDetail(Long boardId) {
+    public Board selectBoardDetail(int boardId) {
         Board board = boardRepository.findById(boardId)
                 .orElseThrow(() -> new EntityNotFoundException("Board not found"));
         // 엔티티를 DTO로 변환
@@ -64,7 +64,7 @@ public class BoardServiceImpl implements BoardService{
     }
 
     @Override
-    public Board updateBoard(Long boardId, BoardDto boardDto) {
+    public Board updateBoard(int boardId, BoardDto boardDto) {
         // 기존 Board 조회
         Board findBoard = boardRepository.findById(boardId)
                 .orElseThrow(() -> new IllegalArgumentException("Board not found"));
@@ -83,7 +83,7 @@ public class BoardServiceImpl implements BoardService{
     }
 
     @Override
-    public boolean deleteBorad(Long boardId) {
+    public boolean deleteBorad(int boardId) {
         Board findBoard = boardRepository.findById(boardId)
                 .orElseThrow(() -> new EntityNotFoundException("Board not found"));
         boardRepository.delete(findBoard);
@@ -92,7 +92,7 @@ public class BoardServiceImpl implements BoardService{
 
     //조회수 1증가
     @Override
-    public void incrementHitCount(Long boardId) {
+    public void incrementHitCount(int boardId) {
         boardRepository.updateHitCount(boardId);
     }
 

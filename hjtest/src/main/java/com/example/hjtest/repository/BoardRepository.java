@@ -9,7 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 
-public interface BoardRepository extends JpaRepository<Board,Long> {
+public interface BoardRepository extends JpaRepository<Board,Integer> {
     @Override
     ArrayList<Board> findAll();
 
@@ -17,5 +17,5 @@ public interface BoardRepository extends JpaRepository<Board,Long> {
     @Modifying
     @Transactional
     @Query("UPDATE Board b SET b.hitCnt = b.hitCnt + 1 WHERE b.id = :boardId")
-    int updateHitCount(@Param("boardId") Long boardId);
+    int updateHitCount(@Param("boardId") int boardId);
 }

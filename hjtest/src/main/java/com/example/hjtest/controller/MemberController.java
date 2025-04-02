@@ -1,6 +1,6 @@
 package com.example.hjtest.controller;
 
-import com.example.hjtest.Dto.LoginDto;
+
 import com.example.hjtest.Dto.MemberDto;
 import com.example.hjtest.entity.Member;
 import com.example.hjtest.exception.DuplicateEmailException;
@@ -25,7 +25,7 @@ public class MemberController {
     public ResponseEntity<Member> signup(@RequestBody MemberDto memberDto) {
         log.info("회원가입 요청: {}", memberDto.toString());
         Member insertmember = memberService.insertMember(memberDto);
-        return ResponseEntity.ok(insertmember);
+        return ResponseEntity.status(HttpStatus.CREATED).body(insertmember);
     }
 
     @ExceptionHandler(DuplicateEmailException.class)
@@ -38,7 +38,7 @@ public class MemberController {
     public ResponseEntity<Member> login(@RequestBody MemberDto MemberDto) {
         log.info("로그인 요청: {}", MemberDto.toString());
         Member member = memberService.login(MemberDto);
-        return ResponseEntity.ok(member);
+        return ResponseEntity.status(HttpStatus.OK).body(member);
     }
 
 }
