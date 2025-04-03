@@ -3,6 +3,7 @@ package com.example.hjtest.controller;
 import com.example.hjtest.Dto.BoardDto;
 import com.example.hjtest.entity.Board;
 import com.example.hjtest.service.BoardService;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -52,13 +53,11 @@ public class BoardController {
     }
     @DeleteMapping("/{id}/delete")
     public ResponseEntity<?> deleteBoarad(@PathVariable("id") int id){
-        boolean isDeleted = boardService.deleteBorad(id);
-        if(isDeleted){
+        try {
+            boolean isDeleted = boardService.deleteBorad(id);
             return ResponseEntity.ok("게시글이 삭제되었습니다.");
-        }else {
-            // 게시글이 존재하지 않으면 404 NOT FOUND 반환
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body("게시글이 존재하지 않습니다.");
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("게시글이 없습니다");
         }
     }
 }

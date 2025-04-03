@@ -15,6 +15,4 @@ public interface BoardService {
     Board updateBoard(int boardId, BoardDto boardDto);
 
     boolean deleteBorad(int boardId);
-
-    void incrementHitCount(int boardId);
 }

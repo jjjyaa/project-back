@@ -27,15 +27,14 @@ public class BoardServiceImpl implements BoardService{
 
     @Override
     public List<Board> selectBoardList() {
-        return boardRepository.findAll();
+        return boardRepository.findAllByOrderByCreatedDatetimeDesc();
     }
 
     @Override
     public Board selectBoardDetail(int boardId) {
-        Board board = boardRepository.findById(boardId)
-                .orElseThrow(() -> new EntityNotFoundException("Board not found"));
-        // 엔티티를 DTO로 변환
 
+        //조회수 1 증가
+        boardRepository.updateHitCount(boardId);
 
         return boardRepository.findById(boardId)
                 .orElseThrow(() -> new EntityNotFoundException("Board not found"));
@@ -88,12 +87,6 @@ public class BoardServiceImpl implements BoardService{
                 .orElseThrow(() -> new EntityNotFoundException("Board not found"));
         boardRepository.delete(findBoard);
         return true;
-    }
-
-    //조회수 1증가
-    @Override
-    public void incrementHitCount(int boardId) {
-        boardRepository.updateHitCount(boardId);
     }
 
 

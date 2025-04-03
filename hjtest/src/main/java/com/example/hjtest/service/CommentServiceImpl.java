@@ -44,4 +44,39 @@ public class CommentServiceImpl implements CommentService{
         return commentRepository.save(comment);
     }
 
+    // 댓글 수정
+    @Override
+    public Comment updateComment(int commentId, CommentDto commentDto, String email) {
+        // 댓글 조회
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new EntityNotFoundException("Comment not found"));
+
+        // 작성자 확인
+        if (!comment.getMember().getEmail().equals(email)) {
+            throw new IllegalArgumentException("You are not the author of this comment.");
+        }
+
+        // 댓글 내용 수정
+        comment.setContent(commentDto.getContent());
+
+        // 댓글 수정된 내용 저장
+        return commentRepository.save(comment);
+    }
+
+    // 댓글 삭제
+    @Override
+    public boolean deleteComment(int commentId, String email) {
+        // 댓글 조회
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new EntityNotFoundException("Comment not found"));
+
+        // 댓글 작성자가 요청한 회원인지 확인
+        if (!comment.getMember().getEmail().equals(email)) {
+            throw new IllegalArgumentException("You are not the author of this comment.");
+        }
+
+        // 댓글 삭제
+        commentRepository.delete(comment);
+        return true;
+    }
 }

@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public interface BoardRepository extends JpaRepository<Board,Integer> {
     @Override
@@ -18,4 +19,7 @@ public interface BoardRepository extends JpaRepository<Board,Integer> {
     @Transactional
     @Query("UPDATE Board b SET b.hitCnt = b.hitCnt + 1 WHERE b.id = :boardId")
     int updateHitCount(@Param("boardId") int boardId);
+
+    //생성시간 기준 정렬 (최신글순서)
+    List<Board> findAllByOrderByCreatedDatetimeDesc();
 }
