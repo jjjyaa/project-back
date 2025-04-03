@@ -20,7 +20,7 @@ public class CommentController {
     @Autowired
     private CommentService commentService;
 
-    @GetMapping("/{boardId}")
+    @GetMapping("/board/{boardId}")
     public List<Comment> getComment(@PathVariable("boardId") int boardId) {
         return commentService.getCommentByBoardId(boardId);
     }
