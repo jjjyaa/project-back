@@ -17,7 +17,7 @@ public class CommentDto {
     private String content;
     private String createdDatetime;
     private int boardId;
-    private String memberEmail;
+    private String email;
 
     public Comment toEntity(Board board, Member member) {
         return new Comment(this.commentId, this.content, this.createdDatetime, board, member);

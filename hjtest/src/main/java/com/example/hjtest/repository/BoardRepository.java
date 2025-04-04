@@ -11,8 +11,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public interface BoardRepository extends JpaRepository<Board,Integer> {
-    @Override
-    ArrayList<Board> findAll();
 
     //JPQL
     @Modifying
@@ -21,5 +19,6 @@ public interface BoardRepository extends JpaRepository<Board,Integer> {
     int updateHitCount(@Param("boardId") int boardId);
 
     //생성시간 기준 정렬 (최신글순서)
+    @Query("select board from Board board left join fetch board.member order by board.createdDatetime desc")
     List<Board> findAllByOrderByCreatedDatetimeDesc();
 }

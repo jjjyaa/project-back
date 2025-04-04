@@ -41,9 +41,9 @@ public class BoardServiceImpl implements BoardService{
     }
 
     @Override
-    public Board insertBoard(BoardDto boardDto, String email) {
+    public Board insertBoard(BoardDto boardDto) {
         // 로그인한 사용자의 Member 정보 조회
-        Member member = memberRepository.findById(email)
+        Member member = memberRepository.findById(boardDto.getEmail())
                 .orElseThrow(() -> new IllegalArgumentException("Member not found"));
 
         // BoardDto를 Board 엔티티로 변환
@@ -95,7 +95,7 @@ public class BoardServiceImpl implements BoardService{
         return commentDtos.stream()
                 .map(commentDto -> {
                     // 해당 Member를 DB에서 조회
-                    Member memberEntity = memberRepository.findById(commentDto.getMemberEmail())
+                    Member memberEntity = memberRepository.findById(commentDto.getEmail())
                             .orElseThrow(() -> new IllegalArgumentException("Member not found"));
 
                     // 변환된 엔티티를 반환

@@ -10,7 +10,7 @@ public interface CommentService {
 
     public List<Comment> getCommentByBoardId(int boardId);
 
-    public Comment updateComment(int commentId, CommentDto commentDto, String email);
+    public Comment updateComment(int commentId, CommentDto commentDto);
 
-    public boolean deleteComment(int commentId, String email);
+    public boolean deleteComment(int commentId);
 }

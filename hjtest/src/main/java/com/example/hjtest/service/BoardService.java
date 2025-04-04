@@ -10,7 +10,7 @@ public interface BoardService {
 
     Board selectBoardDetail(int boardId);
 
-    Board insertBoard(BoardDto boardDto,String email);
+    Board insertBoard(BoardDto boardDto);
 
     Board updateBoard(int boardId, BoardDto boardDto);
 

@@ -14,7 +14,7 @@ public class BoardDto {
     private String title;
     private String contents;
     private int hitCnt;
-    private MemberDto member;
+    private String email;
     private String createdDatetime;
     private String updatedDatetime;
     private List<CommentDto> comments = new ArrayList<>();

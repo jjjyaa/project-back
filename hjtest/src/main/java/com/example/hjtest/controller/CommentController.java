@@ -15,7 +15,6 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequestMapping("api/comments")
-@CrossOrigin(origins = "http://localhost:3000")
 public class CommentController {
     @Autowired
     private CommentService commentService;
@@ -35,10 +34,9 @@ public class CommentController {
     }
     @PatchMapping("/{commentId}/update")
     public ResponseEntity<?> updateComment(@PathVariable("commentId") int commentId,
-                                           @RequestBody CommentDto commentDto,
-                                           @RequestHeader("email") String email){
+                                           @RequestBody CommentDto commentDto){
         try{
-            Comment updatedComment = commentService.updateComment(commentId, commentDto, email);
+            Comment updatedComment = commentService.updateComment(commentId, commentDto);
             return ResponseEntity.status(HttpStatus.OK).body(updatedComment);
         }catch (EntityNotFoundException e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("댓글이 없습니다");
@@ -46,9 +44,9 @@ public class CommentController {
     }
     @DeleteMapping("/{commentId}/delete")
     public ResponseEntity<?> deleteComment(@PathVariable("commentId") int commentId,
-                                           @RequestHeader("email") String email){
+                                           @RequestBody CommentDto commentDto){
         try{
-            boolean isDeleted = commentService.deleteComment(commentId,email);
+            boolean isDeleted = commentService.deleteComment(commentId);
             return ResponseEntity.ok("댓글이 삭제되었습니다.");
         } catch (EntityNotFoundException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("댓글이 없습니다");

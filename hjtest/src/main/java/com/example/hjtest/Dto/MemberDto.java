@@ -14,7 +14,6 @@ import java.util.List;
 // 회원가입용
 @Data
 public class MemberDto {
-    private Long memberId;
     private String email;
     private String password;
     private String name;

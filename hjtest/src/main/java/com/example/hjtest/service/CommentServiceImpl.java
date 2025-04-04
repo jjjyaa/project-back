@@ -36,7 +36,7 @@ public class CommentServiceImpl implements CommentService{
     public Comment createComment(CommentDto commentDto) {
         Board board = boardRepository.findById(commentDto.getBoardId())
                 .orElseThrow(() -> new EntityNotFoundException("Board not found"));
-        Member member = memberRepository.findById(commentDto.getMemberEmail())
+        Member member = memberRepository.findById(commentDto.getEmail())
                 .orElseThrow(() -> new EntityNotFoundException("User not found"));
 
         // DTO를 엔티티로 변환 후 저장
@@ -46,13 +46,13 @@ public class CommentServiceImpl implements CommentService{
 
     // 댓글 수정
     @Override
-    public Comment updateComment(int commentId, CommentDto commentDto, String email) {
+    public Comment updateComment(int commentId, CommentDto commentDto) {
         // 댓글 조회
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new EntityNotFoundException("Comment not found"));
 
         // 작성자 확인
-        if (!comment.getMember().getEmail().equals(email)) {
+        if (!comment.getMember().getEmail().equals(commentDto.getEmail())) {
             throw new IllegalArgumentException("You are not the author of this comment.");
         }
 
@@ -65,15 +65,10 @@ public class CommentServiceImpl implements CommentService{
 
     // 댓글 삭제
     @Override
-    public boolean deleteComment(int commentId, String email) {
+    public boolean deleteComment(int commentId) {
         // 댓글 조회
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new EntityNotFoundException("Comment not found"));
-
-        // 댓글 작성자가 요청한 회원인지 확인
-        if (!comment.getMember().getEmail().equals(email)) {
-            throw new IllegalArgumentException("You are not the author of this comment.");
-        }
 
         // 댓글 삭제
         commentRepository.delete(comment);

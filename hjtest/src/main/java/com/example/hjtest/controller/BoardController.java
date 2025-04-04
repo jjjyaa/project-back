@@ -15,7 +15,6 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequestMapping("api/boards")
-@CrossOrigin(origins = "http://localhost:3000")
 public class BoardController {
 
     @Autowired
@@ -34,9 +33,8 @@ public class BoardController {
         return ResponseEntity.status(HttpStatus.OK).body(board);
     }
     @PostMapping("/")
-    public ResponseEntity<Board> insertBoard(@RequestBody BoardDto boardDto,
-                                             @RequestHeader("email") String email){
-        Board board = boardService.insertBoard(boardDto,email);
+    public ResponseEntity<Board> insertBoard(@RequestBody BoardDto boardDto){
+        Board board = boardService.insertBoard(boardDto);
         if (board==null){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }

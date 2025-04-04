@@ -30,7 +30,7 @@ public class Comment {
 
     @JsonManagedReference
     @ManyToOne
-    @JoinColumn(name = "member_email")
+    @JoinColumn(name = "email")
     private Member member;
 
     @PrePersist
