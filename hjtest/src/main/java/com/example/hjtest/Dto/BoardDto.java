@@ -1,5 +1,6 @@
 package com.example.hjtest.Dto;
 
+import com.example.hjtest.common.FileUtils;
 import com.example.hjtest.entity.Board;
 import lombok.Data;
 

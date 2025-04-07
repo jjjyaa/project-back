@@ -1,11 +1,14 @@
 package com.example.hjtest.controller;
 
 import com.example.hjtest.Dto.BoardDto;
+import com.example.hjtest.common.FileUtils;
 import com.example.hjtest.entity.Board;
+import com.example.hjtest.entity.BoardFileEntity;
 import com.example.hjtest.service.BoardService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +19,9 @@ import java.util.List;
 @RestController
 @RequestMapping("api/boards")
 public class BoardController {
+
+    @Autowired
+    private FileUtils fileUtils;
 
     @Autowired
     private BoardService boardService;
@@ -32,13 +38,33 @@ public class BoardController {
         }
         return ResponseEntity.status(HttpStatus.OK).body(board);
     }
-    @PostMapping("/")
-    public ResponseEntity<Board> insertBoard(@RequestBody BoardDto boardDto){
-        Board board = boardService.insertBoard(boardDto);
-        if (board==null){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+    @PostMapping(value = "/", consumes = "multipart/form-data")
+    public ResponseEntity<Board> insertBoard(MultipartHttpServletRequest request) {
+        try {
+            // 1. 텍스트 파라미터 수신
+            String title = request.getParameter("title");
+            String contents = request.getParameter("contents");
+            String email = request.getParameter("email");
+
+            // 2. BoardDto 수동 생성
+            BoardDto boardDto = new BoardDto();
+            boardDto.setTitle(title);
+            boardDto.setContents(contents);
+            boardDto.setEmail(email);
+            // 댓글은 비워둠 (빈 리스트 등으로 처리)
+
+            // 3. 파일 저장 처리
+            List<BoardFileEntity> fileList = fileUtils.parseFileInfo(request);
+
+            // 4. 게시글 + 파일 저장
+            Board board = boardService.insertBoard(boardDto, fileList);
+
+            return ResponseEntity.status(HttpStatus.CREATED).body(board);
+
+        } catch (Exception e) {
+            log.error("게시글 작성 중 오류 발생", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
-        return ResponseEntity.status(HttpStatus.CREATED).body(board);
     }
     @PatchMapping("/{id}/update")
     public ResponseEntity<Board> updateBoard(@PathVariable("id") int id,

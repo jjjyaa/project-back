@@ -6,6 +6,7 @@ import com.example.hjtest.Dto.MemberDto;
 import com.example.hjtest.entity.Board;
 import com.example.hjtest.entity.Comment;
 import com.example.hjtest.entity.Member;
+import com.example.hjtest.entity.BoardFileEntity;
 import com.example.hjtest.repository.BoardRepository;
 import com.example.hjtest.repository.MemberRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -41,24 +42,30 @@ public class BoardServiceImpl implements BoardService{
     }
 
     @Override
-    public Board insertBoard(BoardDto boardDto) {
-        // 로그인한 사용자의 Member 정보 조회
+    public Board insertBoard(BoardDto boardDto, List<BoardFileEntity> fileList) {
+        // 1. 로그인한 사용자의 Member 정보 조회
         Member member = memberRepository.findById(boardDto.getEmail())
                 .orElseThrow(() -> new IllegalArgumentException("Member not found"));
 
-        // BoardDto를 Board 엔티티로 변환
+        // 2. BoardDto를 Board 엔티티로 변환
         Board board = boardDto.toEntity();
 
-        // 댓글 리스트를 엔티티로 변환
+        // 3. 댓글 리스트를 엔티티로 변환
         List<Comment> commentEntities = convertComments(boardDto.getComments(), board);
 
-        // Board에 Member 설정
+        // 4. Board에 Member, Comments 설정
         board.setMember(member);
-
-        // 댓글 리스트를 Board 엔티티에 설정
         board.setComments(commentEntities);
 
-        // 게시글 저장
+        // 5. 파일 리스트와 Board 연결
+        if (fileList != null && !fileList.isEmpty()) {
+            for (BoardFileEntity file : fileList) {
+                file.setBoard(board);                   // 외래키 설정
+                board.getFileList().add(file);          // 연관 리스트 추가
+            }
+        }
+
+        // 6. 저장
         return boardRepository.save(board);
     }
 

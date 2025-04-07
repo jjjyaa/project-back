@@ -32,7 +32,7 @@ public class CommentController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인 해야합니다.");
         }
     }
-    @PatchMapping("/{commentId}/update")
+    @PatchMapping("/{commentId}")
     public ResponseEntity<?> updateComment(@PathVariable("commentId") int commentId,
                                            @RequestBody CommentDto commentDto){
         try{
@@ -42,7 +42,7 @@ public class CommentController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("댓글이 없습니다");
         }
     }
-    @DeleteMapping("/{commentId}/delete")
+    @DeleteMapping("/{commentId}")
     public ResponseEntity<?> deleteComment(@PathVariable("commentId") int commentId,
                                            @RequestBody CommentDto commentDto){
         try{
