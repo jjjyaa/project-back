@@ -2,11 +2,10 @@ package com.example.hjtest.service;
 
 import com.example.hjtest.Dto.BoardDto;
 import com.example.hjtest.Dto.CommentDto;
-import com.example.hjtest.Dto.MemberDto;
 import com.example.hjtest.entity.Board;
+import com.example.hjtest.entity.BoardFileEntity;
 import com.example.hjtest.entity.Comment;
 import com.example.hjtest.entity.Member;
-import com.example.hjtest.entity.BoardFileEntity;
 import com.example.hjtest.repository.BoardRepository;
 import com.example.hjtest.repository.MemberRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -36,8 +35,9 @@ public class BoardServiceImpl implements BoardService{
 
         //조회수 1 증가
         boardRepository.updateHitCount(boardId);
+        boardRepository.flush();
 
-        return boardRepository.findById(boardId)
+        return boardRepository.findDetailById(boardId)
                 .orElseThrow(() -> new EntityNotFoundException("Board not found"));
     }
 

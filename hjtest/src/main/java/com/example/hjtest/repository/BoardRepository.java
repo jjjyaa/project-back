@@ -7,8 +7,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public interface BoardRepository extends JpaRepository<Board,Integer> {
 
@@ -18,7 +18,15 @@ public interface BoardRepository extends JpaRepository<Board,Integer> {
     @Query("UPDATE Board b SET b.hitCnt = b.hitCnt + 1 WHERE b.id = :boardId")
     int updateHitCount(@Param("boardId") int boardId);
 
-    //생성시간 기준 정렬 (최신글순서)
-    @Query("select board from Board board left join fetch board.member order by board.createdDatetime desc")
+    @Query("SELECT DISTINCT board FROM Board board " +
+            "LEFT JOIN FETCH board.member " +
+            "LEFT JOIN FETCH board.fileList " +
+            "ORDER BY board.createdDatetime DESC")
     List<Board> findAllByOrderByCreatedDatetimeDesc();
+
+    @Query("SELECT DISTINCT b FROM Board b " +
+            "LEFT JOIN FETCH b.member " +
+            "LEFT JOIN FETCH b.fileList " +
+            "WHERE b.boardId = :boardId")
+    Optional<Board> findDetailById(@Param("boardId") int boardId);
 }

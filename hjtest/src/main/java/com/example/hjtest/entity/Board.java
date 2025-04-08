@@ -85,7 +85,7 @@ public class Board {
     }
 
     // 게시글 좋아요
-    @JsonManagedReference
+    @JsonBackReference
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<BoardLike> likes = new ArrayList<>();
 }
