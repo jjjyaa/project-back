@@ -13,7 +13,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
-@Builder
+
 @Entity
 @Table(name = "t_board")
 @Data
@@ -44,6 +44,15 @@ public class Board {
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
     private List<Comment> comments;
 
+    // 게시글 삭제 시, 관련 파일도 삭제
+    @JsonManagedReference
+    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<BoardFileEntity> fileList = new ArrayList<>();
+
+    // 게시글 좋아요
+    @JsonBackReference
+    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<BoardLike> likes = new ArrayList<>();
 
     // 최초 생성 시점에 자동으로 갱신
     @PrePersist
@@ -65,27 +74,5 @@ public class Board {
             this.contents=board.contents;
         }
     }
-    // 게시글 삭제 시, 관련 파일도 삭제
-    @Builder.Default
-    @JsonManagedReference
-    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<BoardFileEntity> fileList = new ArrayList<>();
 
-    // 필요한 생성자만 추가 (BoardDto.toEntity에서 호출하는 생성자)
-    public Board(int boardId, String title, String contents, int hitCnt, Member member,
-                 String createdDatetime, String updatedDatetime, List<BoardFileEntity> fileList) {
-        this.boardId = boardId;
-        this.title = title;
-        this.contents = contents;
-        this.hitCnt = hitCnt;
-        this.member = member;
-        this.createdDatetime = createdDatetime;
-        this.updatedDatetime = updatedDatetime;
-        this.fileList = fileList != null ? fileList : new ArrayList<>();
-    }
-
-    // 게시글 좋아요
-    @JsonBackReference
-    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<BoardLike> likes = new ArrayList<>();
 }

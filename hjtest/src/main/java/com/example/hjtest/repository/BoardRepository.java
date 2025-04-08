@@ -21,8 +21,8 @@ public interface BoardRepository extends JpaRepository<Board,Integer> {
     @Query("SELECT DISTINCT board FROM Board board " +
             "LEFT JOIN FETCH board.member " +
             "LEFT JOIN FETCH board.fileList " +
-            "ORDER BY board.createdDatetime DESC")
-    List<Board> findAllByOrderByCreatedDatetimeDesc();
+            "ORDER BY board.boardId DESC")
+    List<Board> findAllByOrderByBoardIdDesc();
 
     @Query("SELECT DISTINCT b FROM Board b " +
             "LEFT JOIN FETCH b.member " +

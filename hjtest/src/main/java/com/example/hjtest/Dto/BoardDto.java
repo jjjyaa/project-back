@@ -2,7 +2,9 @@ package com.example.hjtest.Dto;
 
 import com.example.hjtest.common.FileUtils;
 import com.example.hjtest.entity.Board;
+import com.example.hjtest.entity.BoardFileEntity;
 import lombok.Data;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -19,9 +21,11 @@ public class BoardDto {
     private String createdDatetime;
     private String updatedDatetime;
     private List<CommentDto> comments = new ArrayList<>();
+    // 파일을 받기 위한 필드 추가
+    private List<BoardFileEntity> fileList = new ArrayList<>();
 
 
     public Board toEntity() {
-        return new Board(boardId, title, contents, hitCnt,null, createdDatetime, updatedDatetime, null);
+        return new Board(boardId, title, contents, hitCnt,null, createdDatetime, updatedDatetime, null,fileList,null);
     }
 }

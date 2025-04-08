@@ -3,9 +3,9 @@ package com.example.hjtest.service;
 import com.example.hjtest.Dto.BoardDto;
 import com.example.hjtest.Dto.CommentDto;
 import com.example.hjtest.entity.Board;
-import com.example.hjtest.entity.BoardFileEntity;
 import com.example.hjtest.entity.Comment;
 import com.example.hjtest.entity.Member;
+import com.example.hjtest.entity.BoardFileEntity;
 import com.example.hjtest.repository.BoardRepository;
 import com.example.hjtest.repository.MemberRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -27,7 +28,7 @@ public class BoardServiceImpl implements BoardService{
 
     @Override
     public List<Board> selectBoardList() {
-        return boardRepository.findAllByOrderByCreatedDatetimeDesc();
+        return boardRepository.findAllByOrderByBoardIdDesc();
     }
 
     @Override
@@ -35,14 +36,15 @@ public class BoardServiceImpl implements BoardService{
 
         //조회수 1 증가
         boardRepository.updateHitCount(boardId);
+        //조회수1 증가 한거 데이터베이스에 반영
         boardRepository.flush();
 
-        return boardRepository.findDetailById(boardId)
+        return boardRepository.findById(boardId)
                 .orElseThrow(() -> new EntityNotFoundException("Board not found"));
     }
 
     @Override
-    public Board insertBoard(BoardDto boardDto, List<BoardFileEntity> fileList) {
+    public Board insertBoard(BoardDto boardDto) {
         // 1. 로그인한 사용자의 Member 정보 조회
         Member member = memberRepository.findById(boardDto.getEmail())
                 .orElseThrow(() -> new IllegalArgumentException("Member not found"));
@@ -57,11 +59,12 @@ public class BoardServiceImpl implements BoardService{
         board.setMember(member);
         board.setComments(commentEntities);
 
-        // 5. 파일 리스트와 Board 연결
-        if (fileList != null && !fileList.isEmpty()) {
-            for (BoardFileEntity file : fileList) {
-                file.setBoard(board);                   // 외래키 설정
-                board.getFileList().add(file);          // 연관 리스트 추가
+        if (boardDto.getFileList() != null && !boardDto.getFileList().isEmpty()) {
+            // 임시 리스트로 파일을 추가하고, 나중에 board에 설정
+            List<BoardFileEntity> tempFileList = new ArrayList<>(boardDto.getFileList());
+            for (BoardFileEntity file : tempFileList) {
+                file.setBoard(board);  // 외래키 설정
+                board.getFileList().add(file);  // 연관 리스트에 추가
             }
         }
 
