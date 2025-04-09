@@ -1,6 +1,6 @@
 package com.example.hjtest.entity;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -18,12 +18,12 @@ public class BoardLike {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @JsonManagedReference
+    @JsonBackReference("boardLikeRef") // 게시글 좋아요 → Board
     @ManyToOne
     @JoinColumn(name="board_id")
     private Board board;
 
-    @JsonManagedReference
+    @JsonBackReference("memberLikeRef") // 좋아요한 사람(Member)
     @ManyToOne
     @JoinColumn(name = "email")
     private Member member;

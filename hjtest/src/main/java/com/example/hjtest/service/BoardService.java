@@ -1,8 +1,11 @@
 package com.example.hjtest.service;
 
+import com.example.hjtest.Dto.BoardCreateRequestDto;
 import com.example.hjtest.Dto.BoardDto;
+import com.example.hjtest.Dto.BoardResponseDto;
 import com.example.hjtest.entity.Board;
-import com.example.hjtest.entity.BoardFileEntity;
+import org.springframework.web.multipart.MultipartFile;
+
 import java.util.List;
 
 public interface BoardService {
@@ -10,7 +13,7 @@ public interface BoardService {
 
     Board selectBoardDetail(int boardId);
 
-    Board insertBoard(BoardDto boardDto);
+    public BoardResponseDto insertBoard(BoardCreateRequestDto dto, List<MultipartFile> files);
 
     Board updateBoard(int boardId, BoardDto boardDto);
 

@@ -1,7 +1,10 @@
 package com.example.hjtest.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -28,13 +31,17 @@ public class Member {
 
     private String address;
 
-    @JsonBackReference
-    @OneToMany(mappedBy = "member",cascade = CascadeType.ALL,orphanRemoval = true)  // Member가 작성한 게시글
+    @JsonManagedReference("boardWriter") // 게시글 작성자 → Board
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Board> boards = new ArrayList<>();
 
-    @JsonBackReference
-    @OneToMany(mappedBy = "member",cascade = CascadeType.ALL,orphanRemoval = true)  // Member가 작성한 댓글
+    @JsonManagedReference("commentWriter") // 댓글 작성자 → Comment
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments = new ArrayList<>();
+
+    @JsonManagedReference("memberLikeRef") // 좋아요한 게시글 → BoardLike
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<BoardLike> likes = new ArrayList<>();
 
 }
 

@@ -1,7 +1,6 @@
 package com.example.hjtest.entity;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -23,15 +22,16 @@ public class Comment {
 
     private String createdDatetime;
 
-    @JsonManagedReference
+    @JsonBackReference("commentRef") // 게시글 역참조
     @ManyToOne
     @JoinColumn(name = "board_id")
     private Board board;
 
-    @JsonManagedReference
+    @JsonBackReference("commentWriter") // 댓글 작성자
     @ManyToOne
     @JoinColumn(name = "email")
     private Member member;
+
 
     @PrePersist
     public void prePersist() {

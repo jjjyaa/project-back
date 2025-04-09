@@ -1,12 +1,9 @@
 package com.example.hjtest.Dto;
 
-import com.example.hjtest.common.FileUtils;
 import com.example.hjtest.entity.Board;
 import com.example.hjtest.entity.BoardFileEntity;
 import lombok.Data;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 

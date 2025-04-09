@@ -1,19 +1,22 @@
 package com.example.hjtest.service;
 
+import com.example.hjtest.Dto.BoardCreateRequestDto;
 import com.example.hjtest.Dto.BoardDto;
+import com.example.hjtest.Dto.BoardResponseDto;
 import com.example.hjtest.Dto.CommentDto;
+import com.example.hjtest.common.FileUtils;
 import com.example.hjtest.entity.Board;
+import com.example.hjtest.entity.BoardFileEntity;
 import com.example.hjtest.entity.Comment;
 import com.example.hjtest.entity.Member;
-import com.example.hjtest.entity.BoardFileEntity;
 import com.example.hjtest.repository.BoardRepository;
 import com.example.hjtest.repository.MemberRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,6 +28,8 @@ public class BoardServiceImpl implements BoardService{
     private BoardRepository boardRepository;
     @Autowired
     private MemberRepository memberRepository;
+    @Autowired
+    private FileUtils fileUtils;
 
     @Override
     public List<Board> selectBoardList() {
@@ -44,34 +49,35 @@ public class BoardServiceImpl implements BoardService{
     }
 
     @Override
-    public Board insertBoard(BoardDto boardDto) {
-        // 1. 로그인한 사용자의 Member 정보 조회
-        Member member = memberRepository.findById(boardDto.getEmail())
-                .orElseThrow(() -> new IllegalArgumentException("Member not found"));
+    public BoardResponseDto insertBoard(BoardCreateRequestDto dto, List<MultipartFile> files) {
+        // 1. 이메일로 작성자(Member) 조회
+        Member member = memberRepository.findById(dto.getEmail())
+                .orElseThrow(() -> new IllegalArgumentException("회원 정보를 찾을 수 없습니다."));
 
-        // 2. BoardDto를 Board 엔티티로 변환
-        Board board = boardDto.toEntity();
+        // 2. DTO → Board 엔티티 변환
+        Board board = dto.toEntity(member);
 
-        // 3. 댓글 리스트를 엔티티로 변환
-        List<Comment> commentEntities = convertComments(boardDto.getComments(), board);
+        // 3. 파일이 있다면 업로드 처리
+        if (files != null && !files.isEmpty()) {
+            try {
+                List<BoardFileEntity> fileEntities = fileUtils.parseFileInfo(files, dto.getEmail());
 
-        // 4. Board에 Member, Comments 설정
-        board.setMember(member);
-        board.setComments(commentEntities);
-
-        if (boardDto.getFileList() != null && !boardDto.getFileList().isEmpty()) {
-            // 임시 리스트로 파일을 추가하고, 나중에 board에 설정
-            List<BoardFileEntity> tempFileList = new ArrayList<>(boardDto.getFileList());
-            for (BoardFileEntity file : tempFileList) {
-                file.setBoard(board);  // 외래키 설정
-                board.getFileList().add(file);  // 연관 리스트에 추가
+                for (BoardFileEntity file : fileEntities) {
+                    file.setBoard(board);
+                    board.getFileList().add(file);
+                }
+            } catch (Exception e) {
+                log.error("파일 업로드 중 오류 발생", e);
+                throw new RuntimeException("파일 저장 실패", e);
             }
         }
 
-        // 6. 저장
-        return boardRepository.save(board);
-    }
+        // 4. 저장
+        Board saved = boardRepository.save(board);
 
+        // 5. 응답 DTO로 변환해서 리턴
+        return BoardResponseDto.fromEntity(saved);
+    }
     @Override
     public Board updateBoard(int boardId, BoardDto boardDto) {
         // 기존 Board 조회

@@ -27,6 +27,6 @@ public class MemberDto {
 
     public Member toEntity(){
 
-        return new Member(email, password, name, phone, address,boards,comments);
+        return new Member(email, password, name, phone, address,boards,comments,null);
     }
 }

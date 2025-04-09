@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -31,28 +30,27 @@ public class Board {
 
     private int hitCnt=0;
 
+    @JsonBackReference("boardWriter") // 작성자 (Member)
     @ManyToOne
     @JoinColumn(name = "email")
-    @JsonManagedReference
     private Member member;
 
     private String createdDatetime;
 
     private String updatedDatetime;
 
-    @JsonBackReference
+    @JsonManagedReference("commentRef")
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
     private List<Comment> comments;
 
-    // 게시글 삭제 시, 관련 파일도 삭제
-    @JsonManagedReference
+    @JsonManagedReference("fileRef")
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<BoardFileEntity> fileList = new ArrayList<>();
 
-    // 게시글 좋아요
-    @JsonBackReference
+    @JsonManagedReference("boardLikeRef") // 좋아요 리스트 → 관리 주체
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<BoardLike> likes = new ArrayList<>();
+
 
     // 최초 생성 시점에 자동으로 갱신
     @PrePersist

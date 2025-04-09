@@ -34,8 +34,9 @@ public class BoardFileEntity {
     private String creatorId;
 
     // 게시글 연관관계 (N:1)
+    @JsonBackReference("fileRef")
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "board_id")
-    @JsonBackReference
     private Board board;
+
 }
