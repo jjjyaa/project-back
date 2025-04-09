@@ -1,4 +1,4 @@
-package com.example.hjtest.Dto;
+package com.example.hjtest.Dto.board;
 
 import com.example.hjtest.entity.Board;
 import com.example.hjtest.entity.Member;

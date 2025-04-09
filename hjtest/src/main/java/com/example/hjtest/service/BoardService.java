@@ -1,21 +1,22 @@
 package com.example.hjtest.service;
 
-import com.example.hjtest.Dto.BoardCreateRequestDto;
-import com.example.hjtest.Dto.BoardDto;
-import com.example.hjtest.Dto.BoardResponseDto;
-import com.example.hjtest.entity.Board;
+import com.example.hjtest.Dto.board.BoardCreateRequestDto;
+import com.example.hjtest.Dto.board.BoardListResponseDto;
+import com.example.hjtest.Dto.board.BoardResponseDto;
+import com.example.hjtest.Dto.board.BoardUpdateRequestDto;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
 public interface BoardService {
-    List<Board> selectBoardList();
 
-    Board selectBoardDetail(int boardId);
+    List<BoardListResponseDto> selectBoardList();
 
-    public BoardResponseDto insertBoard(BoardCreateRequestDto dto, List<MultipartFile> files);
+    BoardListResponseDto selectBoardDetail(int boardId);
 
-    Board updateBoard(int boardId, BoardDto boardDto);
+    BoardResponseDto insertBoard(BoardCreateRequestDto dto, List<MultipartFile> files);
 
-    boolean deleteBorad(int boardId);
+    BoardResponseDto updateBoard(int boardId, BoardUpdateRequestDto Dto, List<MultipartFile> files);
+
+    boolean deleteBoard(int boardId);
 }

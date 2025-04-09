@@ -1,4 +1,4 @@
-package com.example.hjtest.Dto;
+package com.example.hjtest.Dto.board;
 
 import com.example.hjtest.entity.Board;
 import lombok.Data;
@@ -9,15 +9,16 @@ public class BoardResponseDto {
     private String title;
     private String contents;
     private String createdDatetime;
-    private String writerName;
+    private String name;
 
+    //정적 팩토리 메서드 방식
     public static BoardResponseDto fromEntity(Board board) {
         BoardResponseDto dto = new BoardResponseDto();
         dto.setBoardId(board.getBoardId());
         dto.setTitle(board.getTitle());
         dto.setContents(board.getContents());
         dto.setCreatedDatetime(board.getCreatedDatetime());
-        dto.setWriterName(board.getMember().getName());
+        dto.setName(board.getMember().getName());
         return dto;
     }
 }

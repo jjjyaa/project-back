@@ -1,6 +1,5 @@
 package com.example.hjtest.aop;
 
-import com.example.hjtest.Dto.MemberDto;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -24,9 +23,14 @@ public class LoggerAspect {
 
         if (args != null && args.length > 0) {
             for (Object arg : args) {
-                // 파라미터 타입 이름 (클래스명만 출력)
-                String typeName = arg.getClass().getSimpleName();
-                params.append(typeName).append(": ").append(arg.toString()).append(" ");
+                if (arg != null) {
+                    // 파라미터 타입 이름 (클래스명만 출력)
+                    String typeName = arg.getClass().getSimpleName();
+                    params.append(typeName).append(": ").append(arg.toString()).append(" ");
+                } else {
+                    // 파라미터가 null인 경우 처리
+                    params.append("null ");
+                }
             }
         }
 

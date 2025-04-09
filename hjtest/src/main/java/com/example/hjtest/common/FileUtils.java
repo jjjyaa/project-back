@@ -72,4 +72,23 @@ public class FileUtils {
 
         return fileList;
     }
+
+    public void deleteFile(String filePath) throws Exception {
+        // 'upload' 디렉토리 경로를 기준으로 파일 경로를 결합
+        String basePath = System.getProperty("user.dir");  // 현재 프로젝트 디렉토리 경로
+        String uploadPath = Paths.get(basePath, "..", "upload").toString();  // ../upload 디렉토리
+        String fullPath = Paths.get(uploadPath, filePath).toString();  // 상대 경로로부터 전체 경로 계산
+
+        File file = new File(fullPath);
+
+        if (file.exists()) {
+            if (file.delete()) {
+                System.out.println("파일 삭제 성공: " + fullPath);
+            } else {
+                throw new Exception("파일 삭제에 실패했습니다: " + fullPath);
+            }
+        } else {
+            throw new Exception("파일이 존재하지 않습니다: " + fullPath);  // 파일이 존재하지 않으면 예외 발생
+        }
+    }
 }
