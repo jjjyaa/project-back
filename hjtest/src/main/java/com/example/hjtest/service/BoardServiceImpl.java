@@ -49,10 +49,9 @@ public class BoardServiceImpl implements BoardService{
 
         //조회수 1 증가
         boardRepository.updateHitCount(boardId);
-        //조회수1 증가 한거 데이터베이스에 반영
-        boardRepository.flush();
+
         // Board 객체 조회
-        Board board = boardRepository.findById(boardId)
+        Board board = boardRepository.findDetailById(boardId)
                 .orElseThrow(() -> new EntityNotFoundException("Board not found"));
 
         // Board 객체를 BoardListResponseDto로 변환하여 반환
@@ -95,7 +94,10 @@ public class BoardServiceImpl implements BoardService{
         // 기존 Board 조회
         Board findBoard = boardRepository.findById(boardId)
                 .orElseThrow(() -> new IllegalArgumentException("Board not found"));
-
+        // 이메일이 일치하는지 확인
+        if (dto.getEmail() == null || !dto.getEmail().equals(findBoard.getMember().getEmail())) {
+            throw new IllegalArgumentException("Email does not match the board owner's email");
+        }
         // dto -> 기존 Board 엔티티로 변환
         Board updatedBoard = dto.toEntity(findBoard);
 
@@ -170,4 +172,5 @@ public class BoardServiceImpl implements BoardService{
     public List<BoardListResponseDto> searchBoards(String searchTerm, String searchType) {
         return boardMapper.searchBoards(searchTerm, searchType);
     }
+
 }
