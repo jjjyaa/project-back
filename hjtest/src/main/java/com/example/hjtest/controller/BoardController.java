@@ -74,4 +74,10 @@ public class BoardController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("게시글이 없습니다");
         }
     }
+
+    @GetMapping("/search")
+    public List<BoardListResponseDto> searchBoards(@RequestParam("searchTerm") String searchTerm,
+                                                   @RequestParam("searchType") String searchType) {
+        return boardService.searchBoards(searchTerm, searchType);
+    }
 }

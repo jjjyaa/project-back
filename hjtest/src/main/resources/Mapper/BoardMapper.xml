@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.hjtest.mapper.BoardMapper">
+
+    <!-- 결과 맵 정의 -->
+    <resultMap id="boardResultMap" type="com.example.hjtest.Dto.board.BoardListResponseDto">
+        <result property="boardId" column="board_id"/>
+        <result property="title" column="title"/>
+        <result property="hitCnt" column="hit_cnt"/>
+        <result property="name" column="name"/>
+        <result property="createdDatetime" column="created_datetime"/>
+    </resultMap>
+
+    <!-- 게시글 검색 쿼리 -->
+    <select id="searchBoards" resultMap="boardResultMap">
+        <![CDATA[
+            SELECT
+                b.board_id, b.title, b.hit_cnt, m.name, b.created_datetime
+            FROM t_board b
+            JOIN member m ON b.email = m.email
+            WHERE
+        ]]>
+        <choose>
+            <when test="searchType eq 'title'">
+                <![CDATA[
+                b.title LIKE CONCAT('%', #{searchTerm}, '%')
+                ]]>
+            </when>
+            <when test="searchType eq 'name'">
+                <![CDATA[
+                m.name LIKE CONCAT('%', #{searchTerm}, '%')
+                ]]>
+            </when>
+            <otherwise>
+                <![CDATA[
+                b.title LIKE CONCAT('%', #{searchTerm}, '%')
+                OR m.name LIKE CONCAT('%', #{searchTerm}, '%')
+                ]]>
+            </otherwise>
+        </choose>
+        <![CDATA[
+            ORDER BY b.board_id DESC
+        ]]>
+    </select>
+
+</mapper>

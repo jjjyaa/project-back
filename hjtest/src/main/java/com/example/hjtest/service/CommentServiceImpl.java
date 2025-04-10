@@ -1,6 +1,9 @@
 package com.example.hjtest.service;
 
-import com.example.hjtest.Dto.CommentDto;
+import com.example.hjtest.Dto.comment.CommentCreateRequestDto;
+import com.example.hjtest.Dto.comment.CommentListResponseDto;
+import com.example.hjtest.Dto.comment.CommentResponseDto;
+import com.example.hjtest.Dto.comment.CommentUpdateRequestDto;
 import com.example.hjtest.entity.Board;
 import com.example.hjtest.entity.Comment;
 import com.example.hjtest.entity.Member;
@@ -13,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class CommentServiceImpl implements CommentService{
@@ -27,40 +31,43 @@ public class CommentServiceImpl implements CommentService{
     private MemberRepository memberRepository;
 
     @Override
-    public List<Comment> getCommentByBoardId(int boardId) {
-        return commentRepository.findAllByBoardBoardId(boardId);
+    public List<CommentListResponseDto> getCommentByBoardId(int boardId) {
+        List<Comment> comments = commentRepository.findAllByBoardBoardId(boardId);
+        return comments.stream()
+                .map(comment -> new CommentListResponseDto(comment))
+                .collect(Collectors.toList());
     }
-
     // 댓글 생성
     @Override
-    public Comment createComment(CommentDto commentDto) {
-        Board board = boardRepository.findById(commentDto.getBoardId())
+    public CommentResponseDto createComment(CommentCreateRequestDto Dto) {
+        Board board = boardRepository.findById(Dto.getBoardId())
                 .orElseThrow(() -> new EntityNotFoundException("Board not found"));
-        Member member = memberRepository.findById(commentDto.getEmail())
+        Member member = memberRepository.findById(Dto.getEmail())
                 .orElseThrow(() -> new EntityNotFoundException("User not found"));
 
         // DTO를 엔티티로 변환 후 저장
-        Comment comment = commentDto.toEntity(board, member);
-        return commentRepository.save(comment);
+        Comment comment = Dto.toEntity(board, member);
+        comment = commentRepository.save(comment);
+        return CommentResponseDto.fromEntity(comment);
     }
 
     // 댓글 수정
     @Override
-    public Comment updateComment(int commentId, CommentDto commentDto) {
+    public CommentResponseDto updateComment(int commentId, CommentUpdateRequestDto Dto) {
         // 댓글 조회
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new EntityNotFoundException("Comment not found"));
 
         // 작성자 확인
-        if (!comment.getMember().getEmail().equals(commentDto.getEmail())) {
+        if (!comment.getMember().getEmail().equals(Dto.getEmail())) {
             throw new IllegalArgumentException("You are not the author of this comment.");
         }
-
         // 댓글 내용 수정
-        comment.setContent(commentDto.getContent());
-
+        Dto.toEntity(comment);
         // 댓글 수정된 내용 저장
-        return commentRepository.save(comment);
+        comment = commentRepository.save(comment);
+
+        return  CommentResponseDto.fromEntity(comment);
     }
 
     // 댓글 삭제

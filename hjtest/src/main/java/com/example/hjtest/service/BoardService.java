@@ -10,13 +10,16 @@ import java.util.List;
 
 public interface BoardService {
 
-    List<BoardListResponseDto> selectBoardList();
+    public List<BoardListResponseDto> selectBoardList();
 
-    BoardListResponseDto selectBoardDetail(int boardId);
+    public BoardListResponseDto selectBoardDetail(int boardId);
 
-    BoardResponseDto insertBoard(BoardCreateRequestDto dto, List<MultipartFile> files);
+    public BoardResponseDto insertBoard(BoardCreateRequestDto dto, List<MultipartFile> files);
 
-    BoardResponseDto updateBoard(int boardId, BoardUpdateRequestDto Dto, List<MultipartFile> files);
+    public BoardResponseDto updateBoard(int boardId, BoardUpdateRequestDto Dto, List<MultipartFile> files);
 
-    boolean deleteBoard(int boardId);
+    public boolean deleteBoard(int boardId);
+
+    public List<BoardListResponseDto> searchBoards(String searchTerm, String searchType);
+
 }

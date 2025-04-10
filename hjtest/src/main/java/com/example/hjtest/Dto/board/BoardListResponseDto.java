@@ -3,7 +3,9 @@ package com.example.hjtest.Dto.board;
 
 import com.example.hjtest.entity.Board;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
+@NoArgsConstructor
 @Data
 public class BoardListResponseDto {
     private int boardId;

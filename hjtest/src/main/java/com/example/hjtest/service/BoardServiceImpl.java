@@ -8,6 +8,7 @@ import com.example.hjtest.common.FileUtils;
 import com.example.hjtest.entity.Board;
 import com.example.hjtest.entity.BoardFileEntity;
 import com.example.hjtest.entity.Member;
+import com.example.hjtest.mapper.BoardMapper;
 import com.example.hjtest.repository.BoardRepository;
 import com.example.hjtest.repository.MemberRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -29,6 +30,8 @@ public class BoardServiceImpl implements BoardService{
     private MemberRepository memberRepository;
     @Autowired
     private FileUtils fileUtils;
+    @Autowired
+    private BoardMapper boardMapper;
 
     @Override
     public List<BoardListResponseDto> selectBoardList() {
@@ -104,7 +107,7 @@ public class BoardServiceImpl implements BoardService{
 
                 // 2. 새 파일을 처리할 리스트 생성
                 List<BoardFileEntity> newFiles = fileUtils.parseFileInfo(files, dto.getEmail());
-                
+
                 // 3. 기존 파일들과 비교하여 새로운 파일만 처리
                 for (BoardFileEntity newFile : newFiles) {
                     boolean isDuplicate = false;
@@ -163,4 +166,8 @@ public class BoardServiceImpl implements BoardService{
         return true;
     }
 
+    @Override
+    public List<BoardListResponseDto> searchBoards(String searchTerm, String searchType) {
+        return boardMapper.searchBoards(searchTerm, searchType);
+    }
 }
