@@ -1,9 +1,6 @@
 package com.example.hjtest.service;
 
-import com.example.hjtest.Dto.board.BoardCreateRequestDto;
-import com.example.hjtest.Dto.board.BoardListResponseDto;
-import com.example.hjtest.Dto.board.BoardResponseDto;
-import com.example.hjtest.Dto.board.BoardUpdateRequestDto;
+import com.example.hjtest.Dto.board.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -20,6 +17,6 @@ public interface BoardService {
 
     public boolean deleteBoard(int boardId);
 
-    public List<BoardListResponseDto> searchBoards(String searchTerm, String searchType);
+    public BoardPageResponseDto getPagedBoards(String searchTerm, String searchType, int page, int size);
 
 }

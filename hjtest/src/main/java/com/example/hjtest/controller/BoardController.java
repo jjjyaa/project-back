@@ -1,9 +1,6 @@
 package com.example.hjtest.controller;
 
-import com.example.hjtest.Dto.board.BoardCreateRequestDto;
-import com.example.hjtest.Dto.board.BoardListResponseDto;
-import com.example.hjtest.Dto.board.BoardResponseDto;
-import com.example.hjtest.Dto.board.BoardUpdateRequestDto;
+import com.example.hjtest.Dto.board.*;
 import com.example.hjtest.common.FileUtils;
 import com.example.hjtest.service.BoardService;
 import jakarta.persistence.EntityNotFoundException;
@@ -83,8 +80,12 @@ public class BoardController {
     }
 
     @GetMapping("/search")
-    public List<BoardListResponseDto> searchBoards(@RequestParam("searchTerm") String searchTerm,
-                                                   @RequestParam("searchType") String searchType) {
-        return boardService.searchBoards(searchTerm, searchType);
+    public ResponseEntity<BoardPageResponseDto> searchBoards(@RequestParam("searchTerm") String searchTerm,
+                                                   @RequestParam("searchType") String searchType,
+                                                   @RequestParam("page") int page,
+                                                   @RequestParam("size") int size) {
+
+        BoardPageResponseDto dto = boardService.getPagedBoards(searchTerm, searchType,page,size);
+        return ResponseEntity.ok(dto);
     }
 }

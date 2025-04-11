@@ -1,9 +1,6 @@
 package com.example.hjtest.service;
 
-import com.example.hjtest.Dto.board.BoardCreateRequestDto;
-import com.example.hjtest.Dto.board.BoardListResponseDto;
-import com.example.hjtest.Dto.board.BoardResponseDto;
-import com.example.hjtest.Dto.board.BoardUpdateRequestDto;
+import com.example.hjtest.Dto.board.*;
 import com.example.hjtest.common.FileUtils;
 import com.example.hjtest.entity.Board;
 import com.example.hjtest.entity.BoardFileEntity;
@@ -168,9 +165,26 @@ public class BoardServiceImpl implements BoardService{
         return true;
     }
 
+    // 게시글 목록과 페이징 관련 정보 반환
     @Override
-    public List<BoardListResponseDto> searchBoards(String searchTerm, String searchType) {
-        return boardMapper.searchBoards(searchTerm, searchType);
+    public BoardPageResponseDto getPagedBoards(String searchTerm, String searchType, int page, int size) {
+        // offset 계산
+        int offset = (page - 1) * size;
+
+        // 게시글 목록 조회
+        List<BoardListResponseDto> boards = boardMapper.searchBoards(searchTerm, searchType, offset, size);
+
+        // 전체 게시글 수 조회
+        int totalElements = boardMapper.countBoards(searchTerm, searchType);
+
+        // 총 페이지 수 계산
+        int totalPages = (int) Math.ceil((double) totalElements / size);
+
+        // 현재 페이지에 보여지는 게시글 수
+        int numberOfElements = boards.size();
+
+        // @AllArgsConstructor를 이용하여 BoardPageResponseDto 생성
+        return new BoardPageResponseDto(boards, totalElements, totalPages, size, page, numberOfElements);
     }
 
 }

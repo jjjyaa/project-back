@@ -9,5 +9,7 @@ import java.util.List;
 
 @Mapper
 public interface BoardMapper {
-    List<BoardListResponseDto> searchBoards(String searchTerm, String searchType);
+    List<BoardListResponseDto> searchBoards(String searchTerm, String searchType, int offset, int size);
+
+    int countBoards(String searchTerm, String searchType);
 }

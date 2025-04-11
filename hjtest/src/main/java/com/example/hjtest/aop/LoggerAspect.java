@@ -36,7 +36,10 @@ public class LoggerAspect {
 
         String className = joinPoint.getSignature().getDeclaringType().getSimpleName();
         // 로그 출력
-        log.info("\n메소드 호출: {}.{}() 파라미터: {}", className, methodName, params.toString().trim());
+
+        log.info("\n============================================================================================================\n" +
+                "메소드 호출: {}.{}() 파라미터: {}", className, methodName, params.toString().trim() +
+                "\n============================================================================================================\n");
 
         return joinPoint.proceed();
     }

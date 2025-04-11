@@ -40,7 +40,35 @@
         </choose>
         <![CDATA[
             ORDER BY b.board_id DESC
+            LIMIT #{size} OFFSET #{offset}
         ]]>
     </select>
 
+    <!-- 전체 게시글 수 쿼리 (countBoards) -->
+    <select id="countBoards" resultType="int">
+        <![CDATA[
+          SELECT COUNT(*)
+          FROM t_board b
+          JOIN member m ON b.email = m.email
+          WHERE
+        ]]>
+        <choose>
+            <when test="searchType eq 'title'">
+                <![CDATA[
+                b.title LIKE CONCAT('%', #{searchTerm}, '%')
+                ]]>
+            </when>
+            <when test="searchType eq 'name'">
+                <![CDATA[
+                m.name LIKE CONCAT('%', #{searchTerm}, '%')
+                ]]>
+            </when>
+            <otherwise>
+                <![CDATA[
+                b.title LIKE CONCAT('%', #{searchTerm}, '%')
+                OR m.name LIKE CONCAT('%', #{searchTerm}, '%')
+                ]]>
+            </otherwise>
+        </choose>
+    </select>
 </mapper>
