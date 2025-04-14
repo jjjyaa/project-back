@@ -1,7 +1,7 @@
 package com.example.hjtest.controller;
 
-
-import com.example.hjtest.Dto.MemberDto;
+import com.example.hjtest.Dto.member.MemberCreateRequestDto;
+import com.example.hjtest.Dto.member.MemberResponseDto;
 import com.example.hjtest.entity.Member;
 import com.example.hjtest.exception.DuplicateEmailException;
 import com.example.hjtest.service.MemberService;
@@ -22,19 +22,17 @@ public class MemberController {
 
     // 회원가입 (회원등록)
     @PostMapping("/signup")
-    public ResponseEntity<Member> signup(@RequestBody MemberDto memberDto) {
-        Member insertmember = memberService.insertMember(memberDto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(insertmember);
+    public ResponseEntity<MemberResponseDto> signup(@RequestBody MemberCreateRequestDto memberDto) {
+        Member saved = memberService.insertMember(memberDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(new MemberResponseDto(saved));
     }
 
     // 로그인
     @PostMapping("/login")
-    public ResponseEntity<Member> login(@RequestBody MemberDto MemberDto) {
-        Member member = memberService.login(MemberDto);
-        return ResponseEntity.status(HttpStatus.OK).body(member);
+    public ResponseEntity<MemberResponseDto> login(@RequestBody MemberCreateRequestDto memberDto) {
+        Member member = memberService.login(memberDto);
+        return ResponseEntity.status(HttpStatus.OK).body(new MemberResponseDto(member));
     }
-
-
 
     @ExceptionHandler({DuplicateEmailException.class, IllegalArgumentException.class})
     public ResponseEntity<String> handleExceptions(Exception ex) {

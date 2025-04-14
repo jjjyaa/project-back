@@ -1,17 +1,16 @@
 package com.example.hjtest.service;
 
 
+import com.example.hjtest.Dto.member.MemberCreateRequestDto;
 import com.example.hjtest.entity.Board;
 import com.example.hjtest.entity.Comment;
+import com.example.hjtest.entity.Member;
 import com.example.hjtest.exception.DuplicateEmailException;
+import com.example.hjtest.repository.MemberRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import com.example.hjtest.Dto.MemberDto;
-import com.example.hjtest.entity.Member;
-import com.example.hjtest.repository.MemberRepository;
 
 import java.util.Optional;
 
@@ -24,7 +23,7 @@ public class MemberServiceImpl implements MemberService {
 
     // 회원가입 (회원등록)
     @Override
-    public Member insertMember(MemberDto memberDto) {
+    public Member insertMember(MemberCreateRequestDto  memberDto) {
 
         if (memberRepository.existsById(memberDto.getEmail())) {
             throw new DuplicateEmailException("이미 사용 중인 이메일 입니다.");
@@ -37,7 +36,7 @@ public class MemberServiceImpl implements MemberService {
     }
 
     // 로그인
-    public Member login(MemberDto MemberDto) {
+    public Member login(MemberCreateRequestDto MemberDto) {
         log.info(MemberDto.toString());
         // 이메일로 사용자 조회
         Optional<Member> optionalMember = memberRepository.findById(MemberDto.getEmail());
