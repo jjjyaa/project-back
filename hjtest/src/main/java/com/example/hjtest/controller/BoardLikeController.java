@@ -1,5 +1,6 @@
 package com.example.hjtest.controller;
 
+import com.example.hjtest.Dto.board.BoardLikeStatusReponseDto;
 import com.example.hjtest.service.BoardLikeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -19,16 +20,13 @@ public class BoardLikeController {
         return ResponseEntity.ok(liked ? "좋아요 등록" : "좋아요 취소");
     }
 
-    @GetMapping("/{boardId}/count")
-    public ResponseEntity<Integer> getLikeCount(@PathVariable int boardId) {
-        int count = boardLikeService.getLikeCount(boardId);
-        return ResponseEntity.ok(count);
-    }
+    @GetMapping("/{boardId}/like-status")
+    public ResponseEntity<BoardLikeStatusReponseDto> getLikeStatus(
+            @PathVariable int boardId,
+            @RequestParam String email) {
 
-    @GetMapping("/{boardId}/status")
-    public ResponseEntity<Boolean> hasUserLiked(@PathVariable int boardId,
-                                                @RequestParam String email) {
-        boolean liked = boardLikeService.hasUserLiked(boardId, email);
-        return ResponseEntity.ok(liked);
+        BoardLikeStatusReponseDto response = boardLikeService.getLikeStatus(boardId, email);
+
+        return ResponseEntity.ok(response);
     }
 }

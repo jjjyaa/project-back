@@ -31,17 +31,6 @@ public class BoardServiceImpl implements BoardService{
     private BoardMapper boardMapper;
 
     @Override
-    public List<BoardListResponseDto> selectBoardList() {
-        // 게시글 리스트를 boardId 기준으로 내림차순으로 정렬하여 가져옵니다.
-        List<Board> boards = boardRepository.findAllByOrderByBoardIdDesc();
-
-        // Board -> BoardListResponseDto로 변환하여 반환
-        return boards.stream()
-                .map(board -> new BoardListResponseDto(board))  // Board -> BoardListResponseDto 변환
-                .collect(Collectors.toList());
-    }
-
-    @Override
     public BoardListResponseDto  selectBoardDetail(int boardId) {
 
         //조회수 1 증가

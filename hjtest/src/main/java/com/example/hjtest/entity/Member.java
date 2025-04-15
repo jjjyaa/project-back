@@ -33,14 +33,17 @@ public class Member {
 
     private String address;
 
+    @Builder.Default
     @JsonManagedReference("boardWriter") // 게시글 작성자 → Board
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Board> boards = new ArrayList<>();
 
+    @Builder.Default
     @JsonManagedReference("commentWriter") // 댓글 작성자 → Comment
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments = new ArrayList<>();
 
+    @Builder.Default
     @JsonManagedReference("memberLikeRef") // 좋아요한 게시글 → BoardLike
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<BoardLike> likes = new ArrayList<>();

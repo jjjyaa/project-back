@@ -7,8 +7,6 @@ import java.util.List;
 
 public interface BoardService {
 
-    public List<BoardListResponseDto> selectBoardList();
-
     public BoardListResponseDto selectBoardDetail(int boardId);
 
     public BoardResponseDto insertBoard(BoardCreateRequestDto dto, List<MultipartFile> files);

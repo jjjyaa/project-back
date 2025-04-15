@@ -26,11 +26,6 @@ public class BoardController {
     @Autowired
     private BoardService boardService;
 
-    @GetMapping("/")
-    public ResponseEntity<List<BoardListResponseDto>> selectBoard() {
-        List<BoardListResponseDto> boards = boardService.selectBoardList();
-        return ResponseEntity.status(HttpStatus.OK).body(boards);
-    }
     @GetMapping("/{id}")
     public ResponseEntity<BoardListResponseDto> detailBoard(@PathVariable("id") int id) {
         BoardListResponseDto boardResponseDto = boardService.selectBoardDetail(id);

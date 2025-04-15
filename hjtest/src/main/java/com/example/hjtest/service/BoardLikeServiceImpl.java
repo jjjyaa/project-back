@@ -1,5 +1,6 @@
 package com.example.hjtest.service;
 
+import com.example.hjtest.Dto.board.BoardLikeStatusReponseDto;
 import com.example.hjtest.entity.Board;
 import com.example.hjtest.entity.BoardLike;
 import com.example.hjtest.entity.Member;
@@ -41,18 +42,22 @@ public class BoardLikeServiceImpl implements BoardLikeService {
     }
 
     @Override
-    public int getLikeCount(int boardId) {
+    public BoardLikeStatusReponseDto getLikeStatus(int boardId, String email) {
+        // 게시글 조회
         Board board = boardRepository.findById(boardId)
                 .orElseThrow(() -> new EntityNotFoundException("게시글 없음"));
-        return likeRepository.countByBoard(board);
-    }
 
-    @Override
-    public boolean hasUserLiked(int boardId, String email) {
-        Board board = boardRepository.findById(boardId)
-                .orElseThrow(() -> new EntityNotFoundException("게시글 없음"));
+        // 회원 조회
         Member member = memberRepository.findById(email)
                 .orElseThrow(() -> new EntityNotFoundException("회원 없음"));
-        return likeRepository.findByBoardAndMember(board, member).isPresent();
+
+        // 좋아요 수 조회
+        int likeCount = likeRepository.countByBoard(board);
+
+        // 유저가 해당 게시글에 좋아요를 눌렀는지 여부 확인
+        boolean liked = likeRepository.findByBoardAndMember(board, member).isPresent();
+
+        // DTO에 담아 반환
+        return new BoardLikeStatusReponseDto(likeCount, liked);
     }
 }
