@@ -2,6 +2,8 @@ package com.example.hjtest.service;
 
 
 import com.example.hjtest.Dto.member.MemberCreateRequestDto;
+import com.example.hjtest.Dto.member.MemberResponseDto;
+import com.example.hjtest.Dto.member.MemberUpdateRequestDto;
 import com.example.hjtest.entity.Board;
 import com.example.hjtest.entity.Comment;
 import com.example.hjtest.entity.Member;
@@ -55,7 +57,24 @@ public class MemberServiceImpl implements MemberService {
         return member;
     }
 
-    //회원탈퇴
+    // 회원 수정
+    @Override
+    public MemberResponseDto updateMember(String email, MemberUpdateRequestDto dto) {
+        Member member = memberRepository.findById(email)
+                .orElseThrow(() -> new IllegalArgumentException("회원 없음"));
+
+        Member updated = dto.toEntity();
+
+        member.setPassword(updated.getPassword());
+        member.setName(updated.getName());
+        member.setPhone(updated.getPhone());
+        member.setAddress(updated.getAddress());
+
+        memberRepository.save(member);
+        return new MemberResponseDto(member);
+    }
+
+    // 회원 탈퇴
     public Member deleteMember(String email) {
         Member member = memberRepository.findById(email)
                 .orElseThrow(() -> new EntityNotFoundException("User not found"));

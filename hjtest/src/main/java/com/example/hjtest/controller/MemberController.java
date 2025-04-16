@@ -2,6 +2,7 @@ package com.example.hjtest.controller;
 
 import com.example.hjtest.Dto.member.MemberCreateRequestDto;
 import com.example.hjtest.Dto.member.MemberResponseDto;
+import com.example.hjtest.Dto.member.MemberUpdateRequestDto;
 import com.example.hjtest.entity.Member;
 import com.example.hjtest.exception.DuplicateEmailException;
 import com.example.hjtest.service.MemberService;
@@ -25,6 +26,20 @@ public class MemberController {
     public ResponseEntity<MemberResponseDto> signup(@RequestBody MemberCreateRequestDto memberDto) {
         Member saved = memberService.insertMember(memberDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(new MemberResponseDto(saved));
+    }
+
+    // 회원수정
+    @PatchMapping("/{email}")
+    public MemberResponseDto updateMember(@PathVariable String email,
+                                          @RequestBody MemberUpdateRequestDto dto) {
+        return memberService.updateMember(email, dto);
+    }
+
+    // 회원탈퇴
+    @DeleteMapping("/{email}")
+    public ResponseEntity<?> deleteMember(@PathVariable String email) {
+        memberService.deleteMember(email);
+        return ResponseEntity.ok("회원 탈퇴가 완료되었습니다.");
     }
 
     // 로그인

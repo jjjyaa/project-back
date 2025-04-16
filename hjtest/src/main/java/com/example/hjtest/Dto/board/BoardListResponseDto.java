@@ -19,6 +19,9 @@ public class BoardListResponseDto {
     private String contents;
     private List<BoardFileEntity> files;
 
+    private int commentCount;
+    private int likeCount;
+
     // 생성자 방식
     public BoardListResponseDto(Board board) {
         this.boardId = board.getBoardId();
@@ -28,5 +31,24 @@ public class BoardListResponseDto {
         this.createdDatetime = board.getCreatedDatetime();
         this.contents = board.getContents();
         this.files = board.getFileList();
+    }
+
+    // MyBatis용 생성자 (쿼리 결과 매핑용)
+    public BoardListResponseDto(
+            int boardId,
+            String title,
+            int hitCnt,
+            String name,
+            String createdDatetime,
+            int commentCount,
+            int likeCount
+    ) {
+        this.boardId = boardId;
+        this.title = title;
+        this.hitCnt = hitCnt;
+        this.name = name;
+        this.createdDatetime = createdDatetime;
+        this.commentCount = commentCount;
+        this.likeCount = likeCount;
     }
 }

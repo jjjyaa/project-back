@@ -9,15 +9,27 @@
         <result property="hitCnt" column="hit_cnt"/>
         <result property="name" column="name"/>
         <result property="createdDatetime" column="created_datetime"/>
+
+        <result property="commentCount" column="comment_count"/>
+        <result property="likeCount" column="like_count"/>
     </resultMap>
 
     <!-- 게시글 검색 쿼리 -->
     <select id="searchBoards" resultMap="boardResultMap">
         <![CDATA[
             SELECT
-                b.board_id, b.title, b.hit_cnt, m.name, b.created_datetime
+                b.board_id,
+                b.title,
+                b.hit_cnt,
+                m.name,
+                b.created_datetime,
+
+                COUNT(DISTINCT c.comment_id) AS comment_count,   -- ✅ 댓글 수
+                COUNT(DISTINCT l.email) AS like_count          -- ✅ 좋아요 수
             FROM t_board b
             JOIN member m ON b.email = m.email
+            LEFT JOIN comment c ON b.board_id = c.board_id       -- ✅ 댓글 JOIN
+            LEFT JOIN board_like l ON b.board_id = l.board_id    -- ✅ 좋아요 JOIN
             WHERE
         ]]>
         <choose>
@@ -39,6 +51,7 @@
             </otherwise>
         </choose>
         <![CDATA[
+            GROUP BY b.board_id
             ORDER BY b.board_id DESC
             LIMIT #{size} OFFSET #{offset}
         ]]>
